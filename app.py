@@ -1,109 +1,162 @@
 import streamlit as st
-from PIL import Image # ←これが必要です！
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
 import datetime
 
-# --- ここを追加してください ---
-# アイコン画像を読み込む
-try:
-    image = Image.open('icon.png') 
-    # 画像があればそれをアイコンに設定
-    st.set_page_config(page_title="GUARDIAN Cloud", page_icon=image, layout="wide")
-except:
-    # 画像が見つからない時は、とりあえず盾の絵文字にする（エラー防止）
-    st.set_page_config(page_title="GUARDIAN Cloud", page_icon="🛡️", layout="wide")
-# ---------------------------
+# ==========================================
+# 🛠️ デザイン設定 (Pro Tool UI)
+# ==========================================
+st.set_page_config(page_title="GUARDIAN", page_icon="🛡️", layout="wide")
+
+# CSSで「Adobeのようなプロツール感」を演出
+st.markdown("""
+    <style>
+    .stApp { background-color: #F0F2F6; }
+    /* ヘッダーのスタイル (Deep Navy) */
+    .header-box {
+        background-color: #001f3f;
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .header-title {
+        font-family: 'Helvetica', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 0;
+        letter-spacing: 2px;
+    }
+    .header-subtitle {
+        color: #FFD700; /* Construction Yellow */
+        font-size: 0.9rem;
+        font-weight: bold;
+        letter-spacing: 4px;
+        margin-top: 5px;
+    }
+    /* ロックされたボタンの演出 */
+    .locked-card {
+        border: 1px dashed #999;
+        background-color: #e0e0e0;
+        opacity: 0.7;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .locked-card:hover {
+        opacity: 1.0;
+        transform: scale(1.02);
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        cursor: pointer;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # ==========================================
-# 🔥 GUARDIAN クラウド接続システム
+# 🎭 ログインシミュレーター（サイドバー）
 # ==========================================
-
-# 1. Googleサーバーへの接続（鍵を使う）
-if not firebase_admin._apps:
-    # 鍵ファイルを読み込む（ファイル名が正しいか確認！）
-    try:
-        cred = credentials.Certificate('firebase_key.json') 
-        firebase_admin.initialize_app(cred)
-    except Exception as e:
-        st.error(f"鍵エラー: {e}")
-        st.stop()
-
-# データベースの操作権限をゲット
-db = firestore.client()
-
-# ==========================================
-# 🎨 画面デザイン（UI）
-# ==========================================
-
-
-st.title("🛡️ GUARDIAN Cloud")
-st.caption("Constructed by Nakashima Kenso System")
-
-# --- 入力エリア ---
-st.markdown("### 📝 現場日報入力")
-with st.form("daily_report_form"):
-    col1, col2 = st.columns(2)
-    with col1:
-        date = st.date_input("日付", datetime.date.today())
-        worker = st.text_input("担当者名", value="CEO")
+with st.sidebar:
+    st.markdown("## 👤 LOGIN AS")
+    user_role = st.radio("権限を選択 (Debug)", ["👑 親方 (Admin)", "⛑️ 職人 (Guest)"])
     
-    with col2:
-        site_name = st.text_input("現場名", placeholder="例：江上運送様 倉庫")
-        
-    work_content = st.text_area("作業内容", height=100, placeholder="例：屋根の高圧洗浄、ケレン作業")
-    
-    # ★防水屋社長のための特別機能★
     st.markdown("---")
-    st.markdown("#### 🧪 資材使用記録")
-    materials = st.text_area("使用材料・缶数", height=80, placeholder="例：ウレタン主剤 3セット、プライマー 1缶")
+    st.caption("Construction OS X")
+    st.caption("Ver 2.5 - Stable")
+
+# ==========================================
+# 🏠 メイン画面 (Dashboard)
+# ==========================================
+
+# 1. ヘッダー表示
+st.markdown("""
+    <div class="header-box">
+        <div class="header-title">GUARDIAN</div>
+        <div class="header-subtitle">CONSTRUCTION OS X</div>
+    </div>
+""", unsafe_allow_html=True)
+
+# 2. 権限による分岐
+if user_role == "👑 親方 (Admin)":
+    # ----------------------------------------
+    # 👑 親方モード（全開放）
+    # ----------------------------------------
+    st.markdown("### 📊 Executive Dashboard")
     
-    # 送信ボタン
-    submitted = st.form_submit_button("クラウドへ送信 🚀")
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("今月の売上予測", "¥14,200,000", "+12% 📈")
+    col2.metric("粗利益率", "34.2%", "優良")
+    col3.metric("稼働現場", "8 現場", "順調")
+    col4.metric("本日の出面", "24 名", "不足なし")
+    
+    st.divider()
+    
+    # Bento Grid メニュー
+    st.markdown("### 🚀 Quick Access")
+    c1, c2, c3, c4 = st.columns(4)
+    
+    with c1:
+        with st.container(border=True):
+            st.markdown("#### 📸 証拠日報")
+            st.caption("Status: 受付中")
+            if st.button("日報を確認する", use_container_width=True):
+                st.switch_page("pages/01_daily_report.py")
+    with c2:
+        with st.container(border=True):
+            st.markdown("#### 💰 経営コックピット")
+            st.caption("Status: Online")
+            st.button("詳細分析へ", use_container_width=True)
+    with c3:
+        with st.container(border=True):
+            st.markdown("#### 🗺️ God's Eye")
+            st.caption("職人位置情報")
+            st.button("地図を開く", use_container_width=True)
+    with c4:
+        with st.container(border=True):
+            st.markdown("#### 🧾 AI即積くん")
+            st.caption("見積自動作成")
+            st.button("積算開始", use_container_width=True)
 
-    if submitted:
-        if not site_name:
-            st.error("⚠️ 「現場名」は必須です！")
-        else:
-            # 2. データをGoogleのクラウド（Firestore）に飛ばす
-            try:
-                doc_ref = db.collection('reports').add({
-                    'date': str(date),
-                    'worker': worker,
-                    'site': site_name,
-                    'work': work_content,
-                    'materials': materials,
-                    'created_at': firestore.SERVER_TIMESTAMP
-                })
-                st.success(f"✅ 送信完了！ Googleサーバーに保存されました。")
-                st.balloons()
-            except Exception as e:
-                st.error(f"送信エラー: {e}")
+else:
+    # ----------------------------------------
+    # ⛑️ 職人モード（チラ見せUI）
+    # ----------------------------------------
+    st.info(f"ログイン中: {user_role} | 担当現場: 江上運送様 倉庫改修")
+    
+    # 自分のタスク（これだけは使える）
+    st.markdown("### ✅ Your Tasks")
+    c_main, _ = st.columns([1, 2])
+    with c_main:
+        with st.container(border=True):
+            st.markdown("#### 📸 本日の証拠日報")
+            st.caption("17:00までに送信してください")
+            if st.button("日報を書く 📝", type="primary", use_container_width=True):
+                st.switch_page("pages/01_daily_report.py")
 
-# ==========================================
-# 📊 データのリアルタイム確認
-# ==========================================
-st.divider()
-st.subheader("☁️ クラウド保存データ（リアルタイム）")
+    st.divider()
 
-if st.button("最新データを取得 🔄"):
-    try:
-        docs = db.collection('reports').order_by('created_at', direction=firestore.Query.DESCENDING).stream()
-        data_list = []
-        for doc in docs:
-            d = doc.to_dict()
-            data_list.append({
-                "日付": d.get('date'),
-                "現場": d.get('site'),
-                "担当": d.get('worker'),
-                "作業": d.get('work'),
-                "材料": d.get('materials')
-            })
-        
-        if data_list:
-            st.dataframe(data_list, use_container_width=True)
-        else:
-            st.info("まだデータがありません。")
-    except Exception as e:
-        st.error(f"取得エラー: {e}")
+    # 🔥 欲望を刺激する「ロックされた機能」
+    st.markdown("### 🔒 Premium Features (Admin Only)")
+    st.caption("※これらの機能は「親方（経営者）」になると解放されます。")
+
+    col1, col2, col3 = st.columns(3)
+
+    # ロック機能1: 経営
+    with col1:
+        st.markdown('<div class="locked-card"><h4>💰 経営コックピット 🔒</h4><p>売上・利益のリアルタイム分析</p></div>', unsafe_allow_html=True)
+        if st.button("アクセス権を要求", key="lock1", use_container_width=True):
+            st.toast("🚫 権限がありません。「独立」すれば、この数字はあなたのものです。", icon="🔒")
+
+    # ロック機能2: 請求書
+    with col2:
+        st.markdown('<div class="locked-card"><h4>🛡️ エスクロー決済 🔒</h4><p>工事代金の安心保全</p></div>', unsafe_allow_html=True)
+        if st.button("詳細を見る", key="lock2", use_container_width=True):
+            st.toast("🚫 工事完了後、ここから即入金されます。", icon="⚡")
+
+    # ロック機能3: 営業マップ
+    with col3:
+        st.markdown('<div class="locked-card"><h4>🏘️ 空き家ハンター 🔒</h4><p>仕事が無限に見つかる地図</p></div>', unsafe_allow_html=True)
+        if st.button("地図を見る", key="lock3", use_container_width=True):
+            st.toast("🚫 営業エリアの支配権は親方にあります。", icon="🗺️")
+
+    st.warning("💡 Hint: GUARDIANは、将来独立するあなたを応援しています。")
