@@ -1,100 +1,82 @@
 import streamlit as st
-import datetime
 
 # ==========================================
-# 🛠️ デザイン設定 (Pro Tool UI)
+# 🛠️ デザイン設定 (Construction OS X - Deep Navy)
 # ==========================================
 st.set_page_config(page_title="GUARDIAN", page_icon="🛡️", layout="wide")
 
-# CSSで「Adobeのようなプロツール感」を演出
-# スマホのダークモード対策として、文字色を強制的に指定しています
+# CSSで「Deep Navyの世界観」を強制適用
 st.markdown("""
     <style>
-    /* 全体の背景と文字色を強制指定 */
+    /* 1. 背景を強制的に「Deep Navy」にする */
     .stApp {
-        background-color: #F0F2F6;
-        color: #31333F; /* 文字を濃いグレーに強制 */
+        background-color: #001f3f;
     }
     
-    /* メトリック（数字）のラベルを見やすく */
-    [data-testid="stMetricLabel"] {
-        color: #555555 !important;
-    }
-    /* メトリック（数字）の値を見やすく */
-    [data-testid="stMetricValue"] {
-        color: #000000 !important;
+    /* 2. 文字色を「白」にする（ダークモード対応） */
+    h1, h2, h3, h4, h5, h6, p, div, span, label {
+        color: #FFFFFF !important;
+        font-family: 'Helvetica', sans-serif;
     }
 
-    /* ヘッダーのスタイル (Deep Navy) */
+    /* 3. ヘッダーパネル（特大弁当箱） */
     .header-box {
-        background-color: #001f3f;
+        background-color: #003366; /* 少し明るい紺色 */
         padding: 20px;
-        border-radius: 10px;
-        color: white !important; /* ヘッダー内の文字は白で固定 */
+        border-radius: 15px;
+        border: 1px solid #004080;
         text-align: center;
-        margin-bottom: 30px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
     .header-title {
-        font-family: 'Helvetica', sans-serif;
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: 900;
-        margin: 0;
         letter-spacing: 2px;
-        color: white !important;
+        color: #FFFFFF;
+        margin-bottom: 5px;
     }
     .header-subtitle {
-        color: #FFD700 !important; /* Construction Yellow */
-        font-size: 0.9rem;
+        color: #FFD700; /* Construction Yellow */
+        font-size: 0.8rem;
         font-weight: bold;
         letter-spacing: 4px;
-        margin-top: 5px;
     }
-    
-    /* ロックされたボタンの演出 */
-    .locked-card {
-        border: 1px dashed #999;
-        background-color: #e0e0e0;
-        opacity: 0.7;
-        padding: 20px;
+
+    /* 4. 数字（メトリック）のデザイン */
+    div[data-testid="stMetricValue"] {
+        color: #00FFCC !important; /* 発光するサイバーグリーン */
+        font-size: 1.8rem !important;
+        font-weight: bold;
+    }
+    div[data-testid="stMetricLabel"] {
+        color: #CCCCCC !important; /* 薄いグレー */
+    }
+
+    /* 5. ボタンのデザイン（押しやすく） */
+    div.stButton > button {
+        background-color: #004080;
+        color: white;
+        border: 1px solid #0059b3;
         border-radius: 10px;
-        text-align: center;
-        transition: 0.3s;
-        color: #333 !important; /* カード内の文字色 */
+        padding: 15px 20px;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        width: 100%;
     }
-    .locked-card h4 {
-        color: #000 !important;
-        margin: 0;
-    }
-    .locked-card p {
-        color: #555 !important;
-        font-size: 0.8rem;
-    }
-    .locked-card:hover {
-        opacity: 1.0;
-        transform: scale(1.02);
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        cursor: pointer;
+    div.stButton > button:hover {
+        background-color: #0059b3;
+        border-color: #FFD700;
+        color: white;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 🎭 ログインシミュレーター（サイドバー）
-# ==========================================
-with st.sidebar:
-    st.markdown("## 👤 LOGIN AS")
-    user_role = st.radio("権限を選択 (Debug)", ["👑 親方 (Admin)", "⛑️ 職人 (Guest)"])
-    
-    st.markdown("---")
-    st.caption("Construction OS X")
-    st.caption("Ver 2.6 - Deep Navy Fix")
-
-# ==========================================
-# 🏠 メイン画面 (Dashboard)
+# 🏠 ホーム画面構成 (Bento Grid Layout)
 # ==========================================
 
-# 1. ヘッダー表示
+# 1. ヘッダー（ブランドロゴ）
 st.markdown("""
     <div class="header-box">
         <div class="header-title">GUARDIAN</div>
@@ -102,87 +84,44 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# 2. 権限による分岐
-if user_role == "👑 親方 (Admin)":
-    # ----------------------------------------
-    # 👑 親方モード（全開放）
-    # ----------------------------------------
-    st.markdown("### 📊 Executive Dashboard")
-    
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("今月の売上予測", "¥14,200,000", "+12% 📈")
-    col2.metric("粗利益率", "34.2%", "優良")
-    col3.metric("稼働現場", "8 現場", "順調")
-    col4.metric("本日の出面", "24 名", "不足なし")
-    
-    st.divider()
-    
-    # Bento Grid メニュー
-    st.markdown("### 🚀 Quick Access")
-    c1, c2, c3, c4 = st.columns(4)
-    
-    with c1:
-        with st.container(border=True):
-            st.markdown("#### 📸 証拠日報")
-            st.caption("Status: 受付中")
-            if st.button("日報を確認する", use_container_width=True):
-                st.switch_page("pages/01_daily_report.py")
-    with c2:
-        with st.container(border=True):
-            st.markdown("#### 💰 経営コックピット")
-            st.caption("Status: Online")
-            st.button("詳細分析へ", use_container_width=True)
-    with c3:
-        with st.container(border=True):
-            st.markdown("#### 🗺️ God's Eye")
-            st.caption("職人位置情報")
-            st.button("地図を開く", use_container_width=True)
-    with c4:
-        with st.container(border=True):
-            st.markdown("#### 🧾 AI即積くん")
-            st.caption("見積自動作成")
-            st.button("積算開始", use_container_width=True)
+# 2. 経営コックピット（特大パネル）
+st.markdown("##### 📊 Executive Dashboard")
+col1, col2, col3 = st.columns(3)
+col1.metric("今月の売上予測", "¥14,200,000", "+12%")
+col2.metric("粗利益", "¥4,820,000", "34%")
+col3.metric("稼働現場", "8 現場", "順調")
 
-else:
-    # ----------------------------------------
-    # ⛑️ 職人モード（チラ見せUI）
-    # ----------------------------------------
-    st.info(f"ログイン中: {user_role} | 担当現場: 江上運送様 倉庫改修")
-    
-    # 自分のタスク（これだけは使える）
-    st.markdown("### ✅ Your Tasks")
-    c_main, _ = st.columns([1, 2])
-    with c_main:
-        with st.container(border=True):
-            st.markdown("#### 📸 本日の証拠日報")
-            st.caption("17:00までに送信してください")
-            if st.button("日報を書く 📝", type="primary", use_container_width=True):
-                st.switch_page("pages/01_daily_report.py")
+st.divider()
 
-    st.divider()
+# 3. メイン機能（中パネル - Bento Grid）
+st.markdown("##### 🚀 Quick Access")
 
-    # 🔥 欲望を刺激する「ロックされた機能」
-    st.markdown("### 🔒 Premium Features (Admin Only)")
-    st.caption("※これらの機能は「親方（経営者）」になると解放されます。")
+# スマホでも横並びになるようにカラム設定
+c1, c2 = st.columns(2)
 
-    col1, col2, col3 = st.columns(3)
+with c1:
+    with st.container(border=True):
+        st.markdown("#### 📸 証拠日報")
+        st.caption("現場報告・GPS")
+        if st.button("日報を書く", key="btn_report", use_container_width=True):
+            st.switch_page("pages/01_daily_report.py")
 
-    # ロック機能1: 経営
-    with col1:
-        st.markdown('<div class="locked-card"><h4>💰 経営コックピット 🔒</h4><p>売上・利益のリアルタイム分析</p></div>', unsafe_allow_html=True)
-        if st.button("アクセス権を要求", key="lock1", use_container_width=True):
-            st.toast("🚫 権限がありません。「独立」すれば、この数字はあなたのものです。", icon="🔒")
+with c2:
+    with st.container(border=True):
+        st.markdown("#### 💰 即積くん")
+        st.caption("AI見積作成")
+        st.button("積算開始", key="btn_estimate", use_container_width=True)
 
-    # ロック機能2: 請求書
-    with col2:
-        st.markdown('<div class="locked-card"><h4>🛡️ エスクロー決済 🔒</h4><p>工事代金の安心保全</p></div>', unsafe_allow_html=True)
-        if st.button("詳細を見る", key="lock2", use_container_width=True):
-            st.toast("🚫 工事完了後、ここから即入金されます。", icon="⚡")
+# 4. ツール群（小パネル横並び）
+st.markdown("##### 🛠️ Tools")
+c3, c4, c5 = st.columns(3)
+with c3:
+    st.button("🏘️ 空き家", use_container_width=True)
+with c4:
+    st.button("🚁 測量", use_container_width=True)
+with c5:
+    st.button("🧱 建材", use_container_width=True)
 
-    # ロック機能3: 営業マップ
-    with col3:
-        st.markdown('<div class="locked-card"><h4>🏘️ 空き家ハンター 🔒</h4><p>仕事が無限に見つかる地図</p></div>', unsafe_allow_html=True)
-        if st.button("地図を見る", key="lock3", use_container_width=True):
-            st.toast("🚫 営業エリアの支配権は親方にあります。", icon="🗺️")
-
-    st.warning("💡 Hint: GUARDIANは、将来独立するあなたを応援しています。")
+# 5. フッター（ボトムナビ風演出）
+st.markdown("---")
+st.caption("Logged in as: Admin (CEO Mode)")
