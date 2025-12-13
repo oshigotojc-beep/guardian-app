@@ -7,15 +7,30 @@ import datetime
 st.set_page_config(page_title="GUARDIAN", page_icon="🛡️", layout="wide")
 
 # CSSで「Adobeのようなプロツール感」を演出
+# スマホのダークモード対策として、文字色を強制的に指定しています
 st.markdown("""
     <style>
-    .stApp { background-color: #F0F2F6; }
+    /* 全体の背景と文字色を強制指定 */
+    .stApp {
+        background-color: #F0F2F6;
+        color: #31333F; /* 文字を濃いグレーに強制 */
+    }
+    
+    /* メトリック（数字）のラベルを見やすく */
+    [data-testid="stMetricLabel"] {
+        color: #555555 !important;
+    }
+    /* メトリック（数字）の値を見やすく */
+    [data-testid="stMetricValue"] {
+        color: #000000 !important;
+    }
+
     /* ヘッダーのスタイル (Deep Navy) */
     .header-box {
         background-color: #001f3f;
         padding: 20px;
         border-radius: 10px;
-        color: white;
+        color: white !important; /* ヘッダー内の文字は白で固定 */
         text-align: center;
         margin-bottom: 30px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -26,14 +41,16 @@ st.markdown("""
         font-weight: 900;
         margin: 0;
         letter-spacing: 2px;
+        color: white !important;
     }
     .header-subtitle {
-        color: #FFD700; /* Construction Yellow */
+        color: #FFD700 !important; /* Construction Yellow */
         font-size: 0.9rem;
         font-weight: bold;
         letter-spacing: 4px;
         margin-top: 5px;
     }
+    
     /* ロックされたボタンの演出 */
     .locked-card {
         border: 1px dashed #999;
@@ -43,6 +60,15 @@ st.markdown("""
         border-radius: 10px;
         text-align: center;
         transition: 0.3s;
+        color: #333 !important; /* カード内の文字色 */
+    }
+    .locked-card h4 {
+        color: #000 !important;
+        margin: 0;
+    }
+    .locked-card p {
+        color: #555 !important;
+        font-size: 0.8rem;
     }
     .locked-card:hover {
         opacity: 1.0;
@@ -62,7 +88,7 @@ with st.sidebar:
     
     st.markdown("---")
     st.caption("Construction OS X")
-    st.caption("Ver 2.5 - Stable")
+    st.caption("Ver 2.6 - Deep Navy Fix")
 
 # ==========================================
 # 🏠 メイン画面 (Dashboard)
