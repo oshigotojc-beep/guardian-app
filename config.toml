@@ -1,0 +1,18 @@
+[theme]
+# ベーステーマ (OS設定に自動追従)
+base = "light" 
+
+# プライマリカラー (ディープ・サファイア・ネイビー - 信頼と高級感)
+primaryColor = "#003366" 
+
+# 背景色 (クリーンなオフホワイト)
+backgroundColor = "#F7F9FC" 
+
+# セカンダリ背景色 (カードやサイドバーの背景 - 純粋な白)
+secondaryBackgroundColor = "#FFFFFF" 
+
+# 文字色
+textColor = "#262626" 
+
+# フォント
+font = "sans serif"
